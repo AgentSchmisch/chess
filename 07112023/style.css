@@ -1,0 +1,12 @@
+* {
+    color: white;
+    font-family: "Lato", sans-serif;
+    background-color: #2b2d52;
+    font-size: larger;
+}
+
+#browserConsole{
+    height:5rem;
+    width: 10rem;
+    border:1px dotted white;
+}

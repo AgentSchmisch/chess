@@ -1,0 +1,74 @@
+* {
+    color: white;
+    font-family: "Lato", sans-serif;
+    font-size: larger;
+}
+body {
+    background-image: url("./imgs/background.jpg");
+    background-color: darkslategray;
+    background-size: cover;
+    display:block;
+}
+
+h1{
+    text-align: center;
+    font-size: xx-large;
+}
+
+.uglyplaceholder{
+    width:19%;
+}
+
+#playerName {
+    border: none;
+    color:lightgray;
+    background-color: darkslategray;
+    height: 2rem;
+}
+
+.startcontainer{
+    text-align: center;
+
+}
+
+#start {
+    border:none;
+    height:2rem;
+    color:lightgray;
+    background-color: darkslategray;
+}
+
+
+.dialogbox {
+    display:flex;
+    justify-content:space-evenly;
+}
+
+    
+.dialogbox p {
+    width: 50%;
+}
+
+#options {
+    display:none;
+    flex-direction: column;
+    align-items: center;
+}
+
+#options button {
+    font-size: 1em;
+    background-color:darkslategray;
+    width:25%;
+    margin:0.5em;
+    padding:0.5em;
+}
+
+#inventory{
+    display:none;
+    flex-direction: column;
+    align-items: left;
+}
+
+#inventory *{
+    margin: 0;
+}
