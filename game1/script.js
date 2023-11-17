@@ -9,7 +9,6 @@ cavebtn.addEventListener("click", cave);
 
 const intro = document.querySelector("#dialog");
 
-const body = document.querySelector("body");
 
 const inventory = document.querySelector("#inventory");
 
@@ -21,14 +20,23 @@ const player = {
 
 
 function play(theme) {
+    let audio = new Audio();
     switch (theme){
         case "ambient":
-            var audio = new Audio("./audio/ambient.mp3");
+            track = "./audio/ambient.mp3";
+            audio.src = track;
             audio.play();
         case "tavern":
-            var audio = new Audio("./audio/tavern.mp3");
+            track = "./audio/tavern.mp3";
+            audio.src = track;
             audio.play();
     }
+}
+
+function changeBackground(imgpath){
+    const body = document.querySelector("body");
+
+    body.style.backgroundImage = `url(${imgpath})`;
 }
 
 function remove_startcontainer(){
@@ -38,7 +46,7 @@ function remove_startcontainer(){
 
 function cave(){
     remove_startcontainer();
-    body.style.backgroundImage = "url('./imgs/CaveEntry.avif')";
+    changeBackground('./imgs/CaveEntry.avif')
     if (player.items.includes("sword")) {
         intro.innerHTML="You enter the cave. It is dark and damp. You encounter the guard of the treasure. You have a sword!";
     }
@@ -50,9 +58,9 @@ function cave(){
 
 function tavern(){
     remove_startcontainer();
-    const options = document.querySelector("#options").style.display = "none";
+    document.querySelector("#options").style.display = "none";
     intro.innerHTML="You enter the tavern. It is a small, cozy place with a fire crackling. You see a bartender and a few patrons. You get a few drinks and get talking with the patrons. They tell you about a cave nearby that is rumored to be filled with treasure. You decide to go check it out. You leave the tavern and head towards the cave. You see a sign that says 'Beware of the Cave'. Do you enter the cave or go back to the tavern?";
-    body.style.backgroundImage = "url('./imgs/TavernPatrons.jpg')";
+    changeBackground('./imgs/TavernPatrons.jpg');
     //TODO: add fight scene
 }
 
