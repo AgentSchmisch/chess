@@ -12,10 +12,15 @@ const intro = document.querySelector("#dialog");
 
 const inventory = document.querySelector("#inventory");
 
+const dialogbox = document.querySelector(".dialogbox");
+
+const username = document.querySelector("#username");
+const weapon = document.querySelector("#weapon");
 
 const player = {
     name:"",
-    items:[]
+    items:[],
+    health:100
 }
 
 
@@ -31,6 +36,7 @@ function play(theme) {
             audio.src = track;
             audio.play();
     }
+
 }
 
 function changeBackground(imgpath){
@@ -53,7 +59,7 @@ function cave(){
     else {
         intro.innerHTML="You enter the cave. It is dark and damp. You encounter the guard of the treasure. You dont have a weapon. GAME OVER"
     }
-    
+
 }
 
 function tavern(){
@@ -71,10 +77,14 @@ function startgame(){
     if(playerName !== "" && typeof playerName === "string"){
         intro.innerHTML=`Welcome ${playerName}! You are a young adventurer who has just arrived in the town of Hogsmeade. You are looking for a place to stay for the night. You see a tavern, a hotel, and a stable. Which do you choose?`;
         const options = document.querySelector("#options").style.display = "flex"; 
+
         play("ambient");
-        remove_startcontainer();
+        
         inventory.style.display="flex";
+        dialogbox.style.justifyContent="space-between";
         player.name = playerName;
+        username.innerHTML = `Name: ${player.name}`;
+        remove_startcontainer();
     }
 
     else {
