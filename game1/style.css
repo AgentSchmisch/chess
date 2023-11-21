@@ -53,7 +53,7 @@ h1{
 
 
 #options {
-    display:none;
+    display:flex;
     flex-direction: column;
     align-items: center;
 }
@@ -61,7 +61,7 @@ h1{
 #options button {
     font-size: 1em;
     background-color:darkslategray;
-    width:25%;
+    width:100%;
     margin:0.5em;
     padding:0.5em;
 }
@@ -83,13 +83,41 @@ h1{
     margin: 0;
 }
 
-#town{
+#townoptions{
     display:none;
     flex-direction:column;
     align-items:center;
 }
 
-#town button{
+#townoptions button{
+    font-size: 1em;
+    background-color:darkslategray;
+    width:100%;
+    margin:0.5em;
+    padding:0.5em;
+}
+
+#townInteraction{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+
+#townInteraction button{
+    font-size: 1em;
+    background-color:darkslategray;
+    width:100%;
+    margin:0.5em;
+    padding:0.5em;
+}
+
+
+#tavernContainer {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+#tavernContainer button{
     font-size: 1em;
     background-color:darkslategray;
     width:100%;
