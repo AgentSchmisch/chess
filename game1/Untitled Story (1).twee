@@ -1,0 +1,64 @@
+:: StoryTitle
+Untitled Story
+
+
+:: StoryData
+{
+  "ifid": "C9E6E6F1-7154-4CE0-B126-E8D28A964673",
+  "format": "Harlowe",
+  "format-version": "3.3.7",
+  "start": "Welcome",
+  "zoom": 1
+}
+
+
+:: Cave {"position":"1050,350","size":"100,100"}
+[[has weapon]]
+[[has no weapon]]
+
+
+:: Hotel {"position":"950,525","size":"100,100"}
+You enter the hotel, there is a free room, you go to sleep. During the night you get repeatedly waken by scary noises.
+
+The next morning you ask the porter about the noises. He tells you that there is a spooky cave near the town. No one has ever returned from there.
+
+[[Cave]]
+
+
+:: Shed {"position":"800,75","size":"100,100"}
+While taking you way to the shed you encounter a sign that says "Beware of the Cave". Your curiosity get sparked by this sign and you turn  to the tavern to gather more information.
+[[Tavern]]
+
+
+:: Talk to stranger {"position":"625,425","size":"100,100"}
+[[Cave]]
+[[Tavern]]
+[[Hotel]]
+[[Shed]]
+
+
+:: Tavern {"position":"950,200","size":"100,100"}
+You enter the tavern. It is a small, cozy place with a fire crackling. You see a bartender and a few patrons. You get a few drinks and get talking with the patrons. They tell you about a cave nearby that is rumored to be filled with treasure. You decide to go check it out. You leave the tavern and head towards the cave. You see a sign that says 'Beware of the Cave'. Do you enter the cave or go back to the tavern?
+
+
+:: Welcome {"position":"400,300","size":"100,100"}
+Welcome $playerName! You are a young adventurer who has just arrived in the town of Hogsmeade. You are looking for a place to stay for the night. You see a tavern, a hotel, and a stable. Which do you choose?
+
+[[Talk to stranger]]
+[[take a look around]]
+
+
+
+:: has no weapon {"position":"1300,450","size":"100,100"}
+You enter the cave. It is dark and damp. You encounter the guard of the treasure. You dont have a weapon. GAME OVER
+
+
+:: has weapon {"position":"1300,325","size":"100,100"}
+You enter the cave. It is dark and damp. You encounter the guard of the treasure. You have a sword!
+
+
+:: take a look around {"position":"575,150","size":"100,100"}
+[[Cave]]
+[[Tavern]]
+[[Hotel]]
+[[Shed]]
