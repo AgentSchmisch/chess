@@ -144,8 +144,7 @@ function gameOver(cause) {
     setTimeout(() => {
         player.deaths++;
         environment.background('./imgs/gameover.jpg');
-        environment.toggleTownSquareButtons(false);
-        intro.innerHTML = " You encounter the guard of the treasure. You dont have a weapon. GAME OVER"
+        intro.innerHTML = "You encounter the guard of the treasure. You dont have a weapon. GAME OVER"
         environment.play("gameOver");
         player.health = 0;
         player.update();
@@ -247,7 +246,7 @@ function cave() {
 
         environment.toggleTownOptionsButtons(false);
         intro.innerHTML = "You enter the cave. It is dark and damp."
-        gameOver();
+        gameOver("cave");
     }
 }
 
