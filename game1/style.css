@@ -51,6 +51,12 @@ h1{
     text-align: center;
 }
 
+#dialog{
+    background-color: rgba(125,125,125,0.85);
+    border-radius: 7px;
+    padding:0.5rem
+}
+
 
 #options {
     display:flex;
@@ -70,6 +76,8 @@ h1{
     display:none;
     flex-direction: column;
     width: 40%;
+    background-color: rgba(125,125,125,0.85);
+    border-radius: 7px;
 }
 
 #inventory p{
@@ -87,6 +95,7 @@ h1{
     display:none;
     flex-direction:column;
     align-items:center;
+    width:40%;
 }
 
 #townoptions button{
@@ -118,6 +127,40 @@ h1{
     align-items:center;
 }
 #tavernContainer button{
+    display:block;
+    font-size: 1em;
+    background-color:darkslategray;
+    width:100%;
+    margin:0.5em;
+    padding:0.5em;
+}
+
+#hotelContainer {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+#hotelContainer button{
+    display:block;
+    font-size: 1em;
+    background-color:darkslategray;
+    width:100%;
+    margin:0.5em;
+    padding:0.5em;
+}
+
+#monster{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+#fightContainer {
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+#fightContainer button{
+    display:block;
     font-size: 1em;
     background-color:darkslategray;
     width:100%;
