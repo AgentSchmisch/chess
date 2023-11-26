@@ -16,14 +16,18 @@ const hotelbtn = document.querySelector("#hotel").addEventListener("click", hote
 const stablebtn = document.querySelector("#shed").addEventListener("click", shed);
 
 document.querySelector("#talk").addEventListener("click", talkToPerson);
-
 document.querySelector("#lookAround").addEventListener("click", townOverview);
+document.querySelector("#leaveTown").addEventListener("click", ()=>gameOver("leaveTown"));
 
 document.querySelector("#toCave").addEventListener("click", TavernToCave);
 document.querySelector("#stay").addEventListener("click", () => gameOver("tavern"));
 
 document.querySelector("#hotelToCave").addEventListener("click", hotelToCave);
 document.querySelector("#hotelStay").addEventListener("click", () => gameOver("hotel"));
+document.querySelector("#toTavern").addEventListener("click", ()=>{
+    tavern();
+    environment.toggleHotelInteractionButtons(false);
+});
 
 
 const intro = document.querySelector("#dialog");
@@ -112,6 +116,7 @@ const player = {
 
     getDamage: function (val) {
         this.health -= val;
+        environment.play("playerDamage");
         if (this.health <= 0) {
             player.health = 0;
             gameOver("defeat");
@@ -143,7 +148,7 @@ function gameOver(cause) {
     if (cause==="cave"){
     setTimeout(() => {
         player.deaths++;
-        environment.background('./imgs/gameover.jpg');
+        environment.background('./imgs/gameovercave.jpg');
         intro.innerHTML = "You encounter the guard of the treasure. You dont have a weapon. GAME OVER"
         environment.play("gameOver");
         player.health = 0;
@@ -154,13 +159,14 @@ function gameOver(cause) {
 
     else if (cause==="tavern") {
         environment.background('./imgs/TavernPatrons.jpg');
+        environment.toggleTavernButtons(false);
         setTimeout(() => {
             intro.innerHTML = "You decide to stay in the tavern, you take a few drinks with the Patrons. You get drunk and fall asleep"
             player.deaths++;
             player.items[0] = "Beer";
             player.health = 0;
             player.update();
-            environment.background('./imgs/TavernPatrons.jpg');
+            environment.background('./imgs/gameoverTavern.jpg');
             environment.play("gameOver");
 
             setTimeout(()=>{startGame()
@@ -170,12 +176,13 @@ function gameOver(cause) {
     }
     else if (cause==="hotel") {
         environment.background('./imgs/hotel.jpg');
+        environment.toggleHotelInteractionButtons(false)
         setTimeout(()=>{
             intro.innerHTML = "You decide to stay in the hotel, the monster of the cave continues its mischief. You leave the town. GAME OVER"
             player.deaths++;
             player.health = 0;
             player.update();
-            environment.background('./imgs/hotel.jpg');
+            environment.background('./imgs/gameoverHotel.jpg');
             environment.play("gameOver");
 
             setTimeout(()=>{startGame()
@@ -188,9 +195,31 @@ function gameOver(cause) {
         player.health = 0;
         player.update();
         intro.innerHTML ="You died. GAME OVER"
-        environment.background('./imgs/hotel.jpg');
+        environment.background('./imgs/gameoverHotel.jpg');
         environment.play("gameOver");
         environment.toggleFightContainer(false)
+        monster.toggleHealthvisibility(false);
+        environment.toggleInventory(false);
+        monster.health = 0;
+        player.health = 0;
+
+        setTimeout(()=>{startGame()
+            environment.toggleHotelInteractionButtons(false);
+            monster.health = 100;
+            player.health = 100;
+            player.update();
+        }, 6000);
+    }
+    else if (cause==="leaveTown"){
+        player.deaths++;
+        player.health = 0;
+        player.update();
+        intro.innerHTML ="You leave the town. GAME OVER"
+        environment.background('./imgs/gameoverTown.jpg');
+        environment.play("gameOver");
+        environment.toggleFightContainer(false);
+        environment.toggleTownOptionsButtons(false);
+        environment.toggleTownInteractionButtons(false);
         monster.toggleHealthvisibility(false);
         environment.toggleInventory(false);
         monster.health = 0;
@@ -224,7 +253,7 @@ function cave() {
         intro.innerHTML = "You enter the cave. It is dark and damp. You encounter the guard of the treasure. You have a sword!";
         setTimeout(() => {
             monster.toggleHealthvisibility(true);
-            environment.play("tavern")
+            environment.play("cave")
             environment.toggleFightContainer(true);
             intro.innerHTML = "You fight the guard and win! You take the treasure and head back to the tavern to celebrate. YOU WIN!"
             environment.background('./imgs/TavernPatrons.jpg');
@@ -234,6 +263,7 @@ function cave() {
     else if (player.items.includes(dagger)){
         intro.innerHTML = "You enter the cave. It is dark and damp. You encounter the guard of the treasure. You have a small Dagger!";
         setTimeout(() => {
+            environment.play("cave")
             monster.toggleHealthvisibility(true);
             environment.toggleFightContainer(true);
             fight();
@@ -251,6 +281,7 @@ function cave() {
 }
 
 function fight(){
+    environment.bachground('./imgs/caveMonster.jpg')
     let maxtime = 3000
     let mintime = 750
     let randtime = Math.floor(Math.random() * (maxtime - mintime) + mintime)
@@ -301,6 +332,7 @@ function hotel() {
     environment.toggleTownOptionsButtons(false);
 
     intro.innerHTML = "You enter the hotel, there is a free room, you go to sleep. During the night you get repeatedly waken by scary noises."
+    environment.play("sleep");
     setTimeout(() => {
         intro.innerHTML = "The next morning you ask the porter about the noises. He tells you that there is a spooky cave near the town. No one has ever returned from there."
         setTimeout(() => {

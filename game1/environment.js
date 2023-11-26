@@ -22,7 +22,6 @@ const environment = {
                 audioPlayer.pause();
                 track = "./audio/ambient.mp3";
                 break;
-
             case "tavern":
                 audioPlayer.pause();
                 track = "./audio/tavern.mp3";
@@ -34,6 +33,14 @@ const environment = {
             case "gameOver":
                 audioPlayer.pause();
                 track = "./audio/gameOver.mp3";
+                break;
+            case "playerDamage":
+                audioPlayer.pause();
+                track = "./audio/gameOver.mp3";
+                break;
+            case "sleep":
+                audioPlayer.pause();
+                track = "./audio/sleeping.mp3";
                 break;
         }
         audioPlayer.src = track;
