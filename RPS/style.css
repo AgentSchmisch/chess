@@ -1,0 +1,32 @@
+#playerContainer button{
+    border: none;
+    background: none;
+    padding:1rem;
+}
+
+body{
+    font-family:"Lato", sans-serif;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+section{
+    margin: 2em;
+}
+
+#stats{
+    display:flex;
+    flex-direction: row;
+    justify-content:space-around;
+    width:100%
+}
+
+#stats p{
+    font-size: 1.7em;
+}
+
+#computer{
+    background-color: antiquewhite;
+    padding: 1rem;
+}
