@@ -6,41 +6,63 @@ const player = {
     wins : 0,
     attempts : 0,
     action:"",
+
+
 }
 
+const computer = Object.assign({}, player)
 
-const computer = Object({}, player)
+player.update = function(){
+    document.querySelector("#scorePlayer").innerHTML = `Player: ${this.wins} ${this.wins < 2 ? "Win" : "Wins" }`;
+}
+
+computer.update = function(){
+    document.querySelector("#scoreComputer").innerHTML = `Computer: ${this.wins} ${this.wins < 2 ? "Win" : "Wins" }`;
+}
+
+player.win = function(){
+    this.wins++;
+    //TODO: add audio to player if he wins
+}
+player.loose = function(){
+
+    //TODO: add audio if the player looses
+}
 
 
 function rock(){
     player.action = "rock";
     computer.action = playEnemy();
     player.attempts++;
-    evaluateWinner(player.action,computer.action)
+    evaluateWinner(player.action, computer.action)
+    console.log("Computer: " + computer.action + "/ Player: " + player.action)
     return ""
 }
 
 function paper(){
-
-    console.log("paper")
+    player.action = "paper";
+    computer.action = playEnemy();
+    player.attempts++;
+    evaluateWinner(player.action, computer.action)
+    console.log("Computer: " + computer.action + "/ Player: " + player.action)
     return ""
 }
 
 function scissors(){
-
-    console.log("scissors")
+    player.action = "scissors";
+    computer.action = playEnemy();
+    player.attempts++;
+    evaluateWinner(player.action, computer.action)
+    console.log("Computer: " + computer.action + "/ Player: " + player.action)
     return ""
 }
 
 function playEnemy(){
     let value = Math.floor(Math.random() * (3 - 0) + 0)
 
-    let actions = ["rock", "paper", "scissors"]
-
-    console.log(value)
-    console.log(actions[value])
-
-    return actions[value]
+    let actions = [["rock","fa-solid fa-hand-back-fist fa-5x"], ["paper","fa-solid fa-hand fa-5x"], ["scissors","fa-solid fa-hand-scissors fa-5x"]]
+    document.querySelector("#computer").className = actions[value][1];
+    return actions[value][0]
 }
 
 function evaluateWinner(_player, _computer){
@@ -56,15 +78,20 @@ function evaluateWinner(_player, _computer){
 
         else if(_computer === "paper"){
             console.log("computer wins")
+            computer.wins++;
+            computer.update();
         }
 
         else if(_computer === "scissors"){
             player.wins++;
+            player.update();
         }
     }
+
     else if(_player === "paper"){
         if(_computer === "rock"){
             player.wins++;
+            player.update();
         }
 
         else if(_computer === "paper"){
@@ -73,25 +100,26 @@ function evaluateWinner(_player, _computer){
 
         else if(_computer === "scissors"){
             console.log("computer wins")
+            computer.wins++;
+            computer.update();
         }
     }
+
     else if(_player === "scissors"){
         if(_computer === "rock"){
             console.log("computer wins")
+            computer.wins++;
+            computer.update();
         }
 
         else if(_computer === "paper"){
             player.wins++;
+            player.update();
         }
 
         else if(_computer === "scissors"){
-            console.log("its a tie")
+            console.log("its a tie");
         }
     }
 
-    let actions = ["rock", "paper", "scissors"]
-
-    let winner = null
-
-    return winner
 }
