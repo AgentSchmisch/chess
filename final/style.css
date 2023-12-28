@@ -2,13 +2,14 @@ body {
   margin: 0;
   background-color: #383838;
   color: white;
+  font-family: "Lato", sans-serif;
+
 }
 
 h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Lato", sans-serif;
 }
 
 .content {
