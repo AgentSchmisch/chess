@@ -24,7 +24,7 @@ class Pawn extends ChessPiece {
     first_move = true
     movement_pattern = {"white":[
         [true, [
-        [3, 1, 3],
+        [0, 1, 0],
         [3, 1, 3],
         [0, 2, 0]
     ]],
