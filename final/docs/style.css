@@ -1,0 +1,105 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #1e1e1e; /* Dark background color */
+    color: #e0e0e0; /* Light text color */
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    display: block; /* Make headings a block element */
+    border-bottom: 1px solid #ddd; /* Add a border bottom for the underline effect */
+    margin-bottom: 10px; /* Add some spacing between headings and content */
+  }
+  
+  h1 {
+    font-size: 2em;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+  }
+  
+  h3 {
+    font-size: 1.17em;
+  }
+  
+  h4 {
+    font-size: 1em;
+  }
+  
+  h5 {
+    font-size: 0.83em;
+  }
+  
+  h6 {
+    font-size: 0.67em;
+  }
+  
+  p {
+    margin-bottom: 16px;
+  }
+  
+  ul, ol {
+    margin-bottom: 16px;
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 8px;
+  }
+  
+  a {
+    color: #81c784; /* Light green for links */
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  code {
+    font-family: 'Courier New', monospace;
+    color: #fff; /* White text color for code */
+  }
+  
+  pre {
+    background-color: #2b2b2b; /* Dark background color for pre blocks */
+    padding: 10px;
+    border: 1px solid #555; /* Dark border color for pre blocks */
+    border-radius: 4px;
+    overflow: auto;
+    color: #fff; /* White text color for pre blocks */
+  }
+  
+  blockquote {
+    border-left: 2px solid #ddd;
+    margin: 0;
+    padding: 10px 20px;
+    background-color: #333; /* Dark background color for blockquote */
+    color: #fff; /* White text color for blockquote */
+  }
+  
+  hr {
+    border: 1px solid #555; /* Dark border color for horizontal rule */
+    margin: 20px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  th, td {
+    border: 1px solid #555; /* Dark border color for table cells */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #444; /* Dark background color for table header */
+  }
+  
