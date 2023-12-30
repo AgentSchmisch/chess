@@ -11,12 +11,17 @@ class ChessPiece {
         "y" : 0
     }
 
+
+    // add functtion checks for blocked piece
+
+
+
+
     constructor(color, y, x) {
         this.color = color;
         this.position.x = x
         this.position.y = y
     }
-
 }
 
 class Pawn extends ChessPiece {
@@ -115,7 +120,6 @@ class Bishop extends ChessPiece {
     constructor(color, y, x) {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/bishop.png`
-
     }}
 
 class Queen extends ChessPiece {
