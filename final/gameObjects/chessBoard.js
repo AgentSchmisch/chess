@@ -22,10 +22,11 @@ class ChessBoard {
         [1, 0, 1, 0, 1, 0, 1, 0],
         [0, 1, 0, 1, 0, 1, 0, 1],
         [1, 0, 1, 0, 1, 0, 1, 0],
-    ]
+    ];
+
     board_configuration = [[new Rook("white"), new Knight("white"), "bishop", "queen", "king", "bishop", "knight", "rook"],
     ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"]
-    ]
+    ];
 
     initializeBoard = function () {
         let board = []
@@ -33,48 +34,49 @@ class ChessBoard {
         for (let x = 0; x < 8; x++) {
             board[x] = [];
             for (let y = 0; y < 8; y++) {
-                board[x][y] = null
+                board[x][y] = null;
             }
         }
+        // filling the board with the initial piece configuration
+        board[0][0] = new Rook("black", 0, 0);
+        board[0][1] = new Knight("black", 0, 1);
+        board[0][2] = new Bishop("black", 0, 2);
+        board[0][3] = new Queen("black", 0, 3);
+        board[0][4] = new King("black", 0, 4);
+        board[0][5] = new Bishop("black", 0, 5);
+        board[0][6] = new Knight("black", 0, 6);
+        board[0][7] = new Rook("black", 0, 7);
 
-        board[0][0] = new Rook("black", 0, 0)
-        board[0][1] = new Knight("black", 0, 1)
-        board[0][2] = new Bishop("black", 0, 2)
-        board[0][3] = new Queen("black", 0, 3)
-        board[0][4] = new King("black")
-        board[0][5] = new Bishop("black")
-        board[0][6] = new Knight("black")
-        board[0][7] = new Rook("black")
+        board[1][0] = new Pawn("black", 1, 0);
+        board[1][1] = new Pawn("black", 1, 1);
+        board[1][2] = new Pawn("black", 1, 2);
+        board[1][3] = new Pawn("black", 1, 3);
+        board[1][4] = new Pawn("black", 1, 4);
+        board[1][5] = new Pawn("black", 1, 5);
+        board[1][6] = new Pawn("black", 1, 6);
+        board[1][7] = new Pawn("black", 1, 7);
 
-        board[1][0] = new Pawn("black", 1, 0)
-        board[1][1] = new Pawn("black", 1, 1)
-        board[1][2] = new Pawn("black", 1, 2)
-        board[1][3] = new Pawn("black", 1, 3)
-        board[1][4] = new Pawn("black", 1, 4)
-        board[1][5] = new Pawn("black", 1, 5)
-        board[1][6] = new Pawn("black", 1, 6)
-        board[1][7] = new Pawn("black", 1, 7)
+        board[7][0] = new Rook("white", 7, 0);
+        board[7][1] = new Knight("white", 7, 1);
+        board[7][2] = new Bishop("white", 7, 2);
+        board[7][3] = new Queen("white", 7, 3);
+        board[7][4] = new King("white", 7, 4);
+        board[7][5] = new Bishop("white", 7, 5);
+        board[7][6] = new Knight("white", 7, 6);
+        board[7][7] = new Rook("white", 7, 7);
 
-        board[7][0] = new Rook("white", 7, 0)
-        board[7][1] = new Knight("white", 7, 1)
-        board[7][2] = new Bishop("white", 7, 2)
-        board[7][3] = new Queen("white", 7, 3)
-        board[7][4] = new King("white", 7, 4)
-        board[7][5] = new Bishop("white", 7, 5)
-        board[7][6] = new Knight("white", 7, 6)
-        board[7][7] = new Rook("white", 7, 7)
+        board[6][0] = new Pawn("white", 6, 0);
+        board[6][1] = new Pawn("white", 6, 1);
+        board[6][2] = new Pawn("white", 6, 2);
+        board[6][3] = new Pawn("white", 6, 3);
+        //board[6][4] = new Pawn("white", 6, 4);
+        board[6][5] = new Pawn("white", 6, 5);
+        board[6][6] = new Pawn("white", 6, 6);
+        board[6][7] = new Pawn("white", 6, 7);
 
-        board[6][0] = new Pawn("white", 6, 0)
-        board[6][1] = new Pawn("white", 6, 1)
-        board[6][2] = new Pawn("white", 6, 2)
-        board[6][3] = new Pawn("white", 6, 3)
-        board[6][4] = new Pawn("white", 6, 4)
-        board[6][5] = new Pawn("white", 6, 5)
-        board[6][6] = new Pawn("white", 6, 6)
-        //board[6][7] = new Pawn("white", 6, 7)
 
-        this.render_killed()
-        return board
+        this.render_killed();
+        return board;
     }
 
     render = function () {
@@ -179,73 +181,31 @@ class ChessBoard {
             search for the number 2, which represents the player position in the movement pattern
         */
 
-
-        const pos_player_representation_shift = []
+        //set the movement pattern shift variable
+        let movement_pattern_shift = object.movement_pattern_shift
 
         // array that is used for the projection consists of zeroes
-        const resultArray = Array.from({ length: 8 }, () => Array(8).fill(0));
+        let resultArray = Array.from({ length: 8 }, () => Array(8).fill(0));
 
-        for (let i = 0; i < movement_pattern.length; i++) {
-            for (let j = 0; j < movement_pattern[i].length; j++) {
-                if (movement_pattern[i][j] === player_representation) {
-                    pos_player_representation_shift.push(i, j)
-                    break;
-                }
-            }
+        //if the current piece is a pawn 
+        if (object instanceof Pawn) {
+            movement_pattern_shift = object.movement_pattern_shift[object.color];
         }
 
         // Project the movement pattern into the resultArray
         for (let i = 0; i < movement_pattern.length; i++) {
             for (let j = 0; j < movement_pattern[i].length; j++) {
                 // skip the array positions in case the movement pattern overlays the borders of the board
-                if (y_pos - pos_player_representation_shift[0] + i < 0 || x_pos - pos_player_representation_shift[1] + j < 0)
+                if (y_pos - movement_pattern_shift[0] + i < 0 || x_pos - movement_pattern_shift[1] + j < 0)
                     continue;
-                else if (y_pos - pos_player_representation_shift[0] + i > 7 || x_pos - pos_player_representation_shift[1] + j > 7)
+                else if (y_pos - movement_pattern_shift[0] + i > 7 || x_pos - movement_pattern_shift[1] + j > 7)
                     continue;
                 // in the movement patterns the number 2 represents the players position, the array projection needs to be moved to the current players position on the chessboard
-                resultArray[y_pos - pos_player_representation_shift[0] + i][x_pos - pos_player_representation_shift[1] + j] = movement_pattern[i][j];
+                resultArray[y_pos - movement_pattern_shift[0] + i][x_pos - movement_pattern_shift[1] + j] = movement_pattern[i][j];
             }
         }
 
 
-
-        let possible_moves = []
-        // for each 1 in the array check if there is a figure on this spot, if so skip, start the loop from the position of the clicked element
-        for (let i = resultArray.length - 1; i >= 0; i--) {
-            for (let j = resultArray[i].length - 1; j >= 0; j--) {
-                if (resultArray[j][i] === 1) {
-                    //console.log("found possible move",j,i)
-                    possible_moves.push([j, i])
-                    // find the closest fields to the current position
-                    // order the array by the row
-                    possible_moves.sort()
-
-
-
-                    if (object instanceof Bishop) {
-
-                    }
-
-                }
-                /*
-                if(resultArray[j][i] === 1 && this.board[j][i] instanceof ChessPiece){
-                    console.log("blocking ", object.position.x, object.position.y, [i,j])
-
-                    // TODO: implement blocking behaviour
-                    //resultArray[j][i] = 0
-                }
-                else if(resultArray[j][i] === 1 && !(this.board[j][i] instanceof ChessPiece)){
-                    console.log("else ", this.board[j][i], [i,j])
-                }
-                */
-
-            }
-        }
-
-        for (let index = 0; index < possible_moves.length; index++) {
-            const element = possible_moves[index];
-            //console.log(element, pos_player_representation)
-        }
         let piece_positions = this.project_piece_position_to_movement_pattern(resultArray)
 
         let numberOfClosestPoints = this.calculate_move_directions(object.position, piece_positions)
@@ -263,7 +223,15 @@ class ChessBoard {
 
         // we can use the resultArray and the current position to get the number of closest points -> go in a circular pattern around the player position and check if there is either 1, 0, or no value at all, according to that result, we get a sum of allowed movement points
 
-        //starting with straight ahead
+        //       | |               (_)       | |    | |  
+        //   ___ | |_  _ __   __ _  _   __ _ | |__  | |_ 
+        //  / __|| __|| '__| / _` || | / _` || '_ \ | __|
+        //  \__ \| |_ | |   | (_| || || (_| || | | || |_ 
+        //  |___/ \__||_|    \__,_||_| \__, ||_| |_| \__|
+        //                              __/ |            
+        //                             |___/   
+
+        //forward
 
         for (let i = player_position.y; i >= 0; i--) {
             if (allowed_positions[i][player_position.x] instanceof ChessPiece && allowed_positions[i][player_position.x].color === this.current_player) {
@@ -288,22 +256,22 @@ class ChessBoard {
         // right
         for (let i = player_position.x; i <= allowed_positions.length; i++) {
             if (allowed_positions[player_position.y][i] instanceof ChessPiece && allowed_positions[player_position.y][i].color === this.current_player) {
-                for (let x = i; x <= allowed_positions.length; x++) {
 
+                for (let x = i; x < allowed_positions.length; x++) {
                     allowed_positions[player_position.y][x] = 0;
                 }
                 break;
             }
-
             else if (allowed_positions[player_position.y][i] instanceof ChessPiece && allowed_positions[i][player_position.x].color != this.current_player) {
-                for (let x = i; x <= allowed_positions.length; x--) {
-                    allowed_positions[x][player_position.x] = 0;
+                for (let x = i; x < allowed_positions.length; x++) {
+                    allowed_positions[player_position.y][x] = 0;
                 }
                 // replace the enemies position with a 1 so it will get colored red
                 allowed_positions[i][player_position.x] = 1
                 break;
             }
         }
+
         // left
         for (let i = player_position.x; i >= 0; i--) {
             if (allowed_positions[player_position.y][i] instanceof ChessPiece && allowed_positions[player_position.y][i].color === this.current_player) {
@@ -312,7 +280,6 @@ class ChessBoard {
                 }
                 break;
             }
-
             else if (allowed_positions[player_position.y][i] instanceof ChessPiece && allowed_positions[player_position.y][i].color != this.current_player) {
                 for (let x = i; x >= 0; x--) {
                     allowed_positions[player_position.y][x] = 0;
@@ -322,8 +289,122 @@ class ChessBoard {
                 break;
             }
         }
-        // TODO: check diagonal pieces
+
+        //straight backwards 
+        for (let i = player_position.y; i < allowed_positions.length; i++) {
+            if (allowed_positions[i][player_position.x] instanceof ChessPiece && allowed_positions[i][player_position.x].color === this.current_player) {
+                // for correctness using y as the loop variable here and x in the other ones
+                for (let y = i; y < allowed_positions.length; y++) {
+                    allowed_positions[y][player_position.x] = 0;
+                }
+                break;
+            }
+            // for documentation purposes the full else if statement is used here -> might cause problems when doing changes but its better for readability imo
+            else if (allowed_positions[i][player_position.x] instanceof ChessPiece && allowed_positions[i][player_position.x].color != this.current_player) {
+                // for correctness using y as the loop variable here and x in the other ones
+                for (let y = i; y < allowed_positions.length; y++) {
+                    allowed_positions[y][player_position.x] = 0;
+                }
+                // reset the enemies position with a 1 so it will get colored red
+                allowed_positions[i][player_position.x] = 1
+                break;
+            }
+        }
+
+        // ______  _                                     _ 
+        // |  _  \(_)                                   | |
+        // | | | | _   __ _   __ _   ___   _ __    __ _ | |
+        // | | | || | / _` | / _` | / _ \ | '_ \  / _` || |
+        // | |/ / | || (_| || (_| || (_) || | | || (_| || |
+        // |___/  |_| \__,_| \__, | \___/ |_| |_| \__,_||_|
+        //                    __/ |                        
+        //                   |___/     
+
+        //diagonal left top
+        for (let x = player_position.x, y = player_position.y; x >= 0 && y >= 0; x--, y--) {
+            if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color === this.current_player) {
+                //introducing a second variable x2,y2
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 >= 0; x2--, y2--) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                break;
+            }
+            // for documentation purposes the full else if statement is used here -> might cause problems when doing changes but its better for readability imo
+            else if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color != this.current_player) {
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 >= 0; y2--, x2--) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                // reset the enemies position with a 1 so it will get colored red
+                allowed_positions[y][x] = 1
+                break;
+            }
+        }
+
+        //diagonal right bottom
+        for (let x = player_position.x, y = player_position.y; x < allowed_positions.length && y < allowed_positions.length; x++, y++) {
+            if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color === this.current_player) {
+                //introducing a second variable x2,y2
+                for (let x2 = x, y2 = y; x2 < allowed_positions.length && y2 < allowed_positions.length; x2++, y2++) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                break;
+            }
+            // for documentation purposes the full else if statement is used here -> might cause problems when doing changes but its better for readability imo
+            else if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color != this.current_player) {
+                for (let x2 = x, y2 = y; x2 < allowed_positions.length && y2 < allowed_positions.length; x2++, y2++) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                // reset the enemies position with a 1 so it will get colored red
+                allowed_positions[y][x] = 1
+                break;
+            }
+        }
+
+        //TODO: diagonal right top
+        for (let x = player_position.x, y = player_position.y; x < allowed_positions.length && y < allowed_positions.length; x++, y--) {
+            if (allowed_positions[x][y] instanceof ChessPiece && allowed_positions[x][y].color === this.current_player) {
+                //introducing a second variable
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 < allowed_positions.length; x2--, y2++) {
+                    allowed_positions[x2][y2] = 0;
+                }
+                break;
+            }
+            // for documentation purposes the full else if statement is used here -> might cause problems when doing changes but its better for readability imo
+            else if (allowed_positions[x][y] instanceof ChessPiece && allowed_positions[x][y].color != this.current_player) {
+                console.log("collided with enemy")
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 < allowed_positions.length; x2--, y2++) {
+                    allowed_positions[x2][y2] = 0;
+                }
+                // reset the enemies position with a 1 so it will get colored red
+                allowed_positions[x][y] = 1
+                break;
+            }
+        }
+
+        //diagonal left bottom 
+        //commented out for testing purposes
+        for (let x = player_position.x, y = player_position.y; x >= 0 && y < allowed_positions.length; x--, y++) {
+            if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color === this.current_player) {
+                //introducing a second variable x2,y2
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 < allowed_positions.length; x2--, y2++) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                break;
+            }
+            // for documentation purposes the full else if statement is used here -> might cause problems when doing changes but its better for readability imo
+            else if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color != this.current_player) {
+                //introducing a second variable x2,y2
+                for (let x2 = x, y2 = y; x2 >= 0 && y2 < allowed_positions.length; x2--, y2++) {
+                    allowed_positions[y2][x2] = 0;
+                }
+                // reset the enemies position with a 1 so it will get colored red
+                allowed_positions[x][y] = 1
+                break;
+            }
+        }
+
         console.log(allowed_positions)
+        return allowed_positions;
     }
 
     find_closest_squares = function (target_square, possible_moves, numberOfClosestPoints) {
@@ -352,6 +433,8 @@ class ChessBoard {
             for (let j = 0; j < movement_pattern[i].length; j++) {
                 if (this.board[j][i] != null && movement_pattern[j][i] === 1) {
                     resultArray[j][i] = this.board[j][i]
+                }
+                else {
                 }
             }
         }
