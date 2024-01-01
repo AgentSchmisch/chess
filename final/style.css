@@ -3,7 +3,6 @@ body {
   background-color: #383838;
   color: white;
   font-family: "Lato", sans-serif;
-
 }
 
 h1 {
@@ -12,11 +11,22 @@ h1 {
   justify-content: center;
 }
 
+.documentation{
+  font-size: 1rem;
+  padding:1em;
+  color:white;
+  background-color: #555;
+}
+
 .content {
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #555555;
+}
+
+.killed{
+  padding:2rem;
 }
 
 .chessboard {
