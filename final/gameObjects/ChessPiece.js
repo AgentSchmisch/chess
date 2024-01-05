@@ -12,14 +12,39 @@ class ChessPiece {
         "x": 0,
         "y": 0
     }
-    killPiece() {
+
+    killPiece(board) {
+        this.killed = true
+        board.killed_pieces.push(this)
+        board.render_killed()
+    }
+
+    movePiece(x, y,board) {
+        //move the piece to the new location
+        board.board[y][x] = this
+        //remove the old piece from the original position
+        board.board[this.position["y"]][this.position["x"]] = null
+
+        if (this instanceof Pawn) {
+            this.first_move = false
+        }
+
+        // refresh the parameters of the specific object
+        this.position["x"] = x;
+        this.position["y"] = y;
+
+        //deactivate the piece
+        this.active = false
+
+        //if the move was valid - switch to the other player
+        board.current_player = board.current_player === "white" ? "black" : "white"
+        document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
+        board.render()
 
     }
 
-    movePiece() {
-
-    }
     movement_directions = []
+
     setMovementDirections() {
         // add the corresponding movement directions to each object according to the movement_directions array
         for (let x = 0; x < this.movement_directions.length; x++) {
@@ -73,7 +98,7 @@ class ChessPiece {
         }
         return allowed_positions;
     }
-    //straight right currently not working
+
     straight_right(player_position, allowed_positions, current_player) {
         for (let i = player_position.x; i < allowed_positions.length; i++) {
             if (allowed_positions[player_position.y][i] instanceof ChessPiece && allowed_positions[player_position.y][i].color === current_player) {
@@ -259,8 +284,6 @@ class Pawn extends ChessPiece {
             "Rook": new Rook(color,x,y),
             "Bishop": new Bishop(color,x,y),
         }
-
-        console.log(x,y)
         // create a new instance of the selected chesspiece
         board.board[x][y] = possiblePieces[toCreate];
         // make the promotiondialog for the current color invisible

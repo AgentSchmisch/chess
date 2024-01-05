@@ -112,7 +112,6 @@ class ChessBoard {
             for (let j = 0; j < resultArray[i].length; j++) {
                 if (resultArray[i][j] === 1) {
                     let css_class = "active"
-                    //TODO: check if there is a an ally in the way of the player
                     if (this.board[i][j] != null) {
 
                         if (this.board[i][j].color != object.color) {
@@ -454,9 +453,9 @@ class ChessBoard {
                             // hand over the active chess piece
 
                             if (this.validateMove(this.board[j][i], [x, y])) {
-
                                 this.movePiece(this.board[j][i], [x, y])
-                                console.log("checking for piece promotion after move")
+
+                                //check if there is a pawn applicable for a promotion
                                 this.check_for_pawn_promotion(this.board[y][x], [x, y])
                             }
                         }
@@ -472,11 +471,10 @@ class ChessBoard {
                         if (this.board[j][i].active) {
                             // hand over the active chess piece
                             if (this.validateMove(this.board[j][i], [x, y], this.board[y][x])) {
-                                this.killPiece(this.board[y][x])
-                                this.movePiece(this.board[j][i], [x, y])
-                                console.log("checking for piece promotion after kill")
+                                this.board[y][x].killPiece(this);
+                                this.board[j][i].movePiece(x, y, this);
+                                //check if there is a pawn applicable for a promotion
                                 this.check_for_pawn_promotion(this.board[y][x], [x, y])
-
                             }
                             else {
                                 continue
@@ -514,9 +512,7 @@ class ChessBoard {
     }
 
     killPiece = function (piece) {
-        piece.killed = true
-        this.killed_pieces.push(piece)
-        this.render_killed()
+
     }
 
     render_killed = function () {
