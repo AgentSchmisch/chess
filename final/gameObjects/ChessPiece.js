@@ -12,6 +12,13 @@ class ChessPiece {
         "x": 0,
         "y": 0
     }
+    killPiece() {
+
+    }
+
+    movePiece() {
+
+    }
     movement_directions = []
     setMovementDirections() {
         // add the corresponding movement directions to each object according to the movement_directions array
@@ -80,7 +87,7 @@ class ChessPiece {
                     allowed_positions[player_position.y][x] = 0;
                 }
                 // replace the enemies position with a 1 so it will get colored red
-                allowed_positions[i][player_position.x] = 1
+                allowed_positions[player_position.y][i] = 1
                 break;
             }
         }
@@ -106,7 +113,6 @@ class ChessPiece {
         }
         return allowed_positions
     }
-
 
     diagonal_left_top(player_position, allowed_positions, current_player) {
         for (let x = player_position.x, y = player_position.y; x >= 0 && y >= 0; x--, y--) {
@@ -154,7 +160,7 @@ class ChessPiece {
     }
 
     diagonal_right_top(player_position, allowed_positions, current_player) {
-        for (let x = player_position.x, y = player_position.y; x < allowed_positions.length && y < allowed_positions.length; x++, y--) {
+        for (let x = player_position.x, y = player_position.y; x < allowed_positions.length && y >= 0; x++, y--) {
             if (allowed_positions[y][x] instanceof ChessPiece && allowed_positions[y][x].color === current_player) {
                 //introducing a second variable
                 for (let x2 = x, y2 = y; y2 >= 0 && x2 < allowed_positions.length; x2++, y2--) {
@@ -213,6 +219,7 @@ class Pawn extends ChessPiece {
         "black": [0, 1]
     }
 
+    // due to the assymetry of the movement pattern of the pawn, it is nessecary to add the color to it
     movement_pattern = {
         "white": [
             [true, [
@@ -231,7 +238,7 @@ class Pawn extends ChessPiece {
             [[true, [
                 [0, 2, 0],
                 [3, 1, 3],
-                [3, 1, 3]
+                [0, 1, 0]
             ]],
             [
                 false, [
@@ -243,6 +250,23 @@ class Pawn extends ChessPiece {
     }
 
     movement_directions = ["straight_backward", "straight_forward"]
+    // needing board, x,y,color 
+    promote(toCreate, board, x, y, color){
+        // object of possible pieces that can be created
+        let possiblePieces = {
+            "Knight": new Knight(color,x,y),
+            "Queen": new Queen(color,x,y),
+            "Rook": new Rook(color,x,y),
+            "Bishop": new Bishop(color,x,y),
+        }
+
+        console.log(x,y)
+        // create a new instance of the selected chesspiece
+        board.board[x][y] = possiblePieces[toCreate];
+        // make the promotiondialog for the current color invisible
+        board.show_promotion_dialog(false, "", "", color, "")
+        board.render();
+    }
 
     constructor(color, y, x) {
         super(color, y, x)
@@ -270,8 +294,10 @@ class Rook extends ChessPiece {
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],]]
+
         movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left"]
-    constructor(color, y, x) {
+    
+        constructor(color, y, x) {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/rook.png`
     }
@@ -293,6 +319,7 @@ class Knight extends ChessPiece {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/knight.png`
     }
+
 }
 
 class Bishop extends ChessPiece {
@@ -314,6 +341,7 @@ class Bishop extends ChessPiece {
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]]
 
     movement_directions = ["diagonal_left_bottom", "diagonal_left_top", "diagonal_right_bottom", "diagonal_right_top"]
+
     constructor(color, y, x) {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/bishop.png`
@@ -341,6 +369,7 @@ class Queen extends ChessPiece {
             [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
             [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
         ]]
+
         movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left", "diagonal_left_bottom", "diagonal_left_top", "diagonal_right_bottom", "diagonal_right_top"]
 
     constructor(color, y, x) {
@@ -360,6 +389,7 @@ class King extends ChessPiece {
             [1, 1, 1]
         ]
     ]
+
     movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left", "diagonal_left_bottom", "diagonal_left_top", "diagonal_right_bottom", "diagonal_right_top"]
 
     constructor(color, y, x) {
