@@ -36,9 +36,6 @@ class ChessPiece {
         //deactivate the piece
         this.active = false
 
-        //if the move was valid - switch to the other player
-        board.current_player = board.current_player === "white" ? "black" : "white"
-        document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
         board.render()
 
     }
@@ -54,7 +51,9 @@ class ChessPiece {
 
     // add functtion checks for blocked piece
     straight_forward(player_position, allowed_positions, current_player) {
+
         for (let i = player_position.y; i >= 0; i--) {
+
             if (allowed_positions[i][player_position.x] instanceof ChessPiece && allowed_positions[i][player_position.x].color === current_player) {
                 // for correctness using y as the loop variable here and x in the other ones
                 for (let y = i; y >= 0; y--) {
@@ -73,6 +72,7 @@ class ChessPiece {
                 break;
             }
         }
+
         return allowed_positions;
     }
 
@@ -316,7 +316,7 @@ class Rook extends ChessPiece {
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],]]
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]]]
 
         movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left"]
     
