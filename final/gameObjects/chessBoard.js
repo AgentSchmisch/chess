@@ -150,10 +150,6 @@ class ChessBoard {
     }
 
     get_movement_pattern = function (object, x_pos, y_pos, color) {
-        console.log(object, x_pos, y_pos, color)
-        if (object.constructor.name === "Rook"){
-            console.log("found the rook")
-        }
         let movement_pattern
 
         // check if the current chessPiece is a pawn, if so display the movement pattern according to the variable first_move
@@ -204,11 +200,10 @@ class ChessBoard {
         let piece_positions = this.project_piece_position_to_movement_pattern(resultArray)
 
         let possible_moves = this.calculate_move_directions(object, piece_positions, color)
-        console.log(possible_moves)
         return possible_moves
     }
 
-    calculate_move_directions = function (player, allowed_positions,color) {
+    calculate_move_directions = function (player, allowed_positions, color) {
         //this method will calculate the possible movement directions
         // - straight ahead
         // - right
@@ -377,14 +372,15 @@ class ChessBoard {
                 }
                 else
                     return false
-            
+
             }
 
         }
     }
 
     check_for_checkmate = function (current_player) {
-        this.get_all_valid_moves_for_color(current_player)
+        let valid_moves = this.get_all_valid_moves_for_color(current_player)
+        console.log(valid_moves)
     }
 
     check_for_pawn_promotion = function (piece, to) {
@@ -421,7 +417,6 @@ class ChessBoard {
 
         // gather all the figures of one color, then calculate all the possible moves that can be done by this color
         // overlay the the current
-        console.log("generating all moves")
         if (opponent_color === "white") {
             for (let y = this.board.length - 1; y >= 0; y--) {
                 for (let x = this.board[y].length - 1; x >= 0; x--) {
@@ -430,45 +425,95 @@ class ChessBoard {
                         if (this.board[y][x].color === opponent_color) {
                             // doing a lot of steps at the same time ... final result is the movement pattern per piece merged with the current board state
                             let movements_for_piece = this.get_movement_pattern(this.board[y][x], this.board[y][x].position.x, this.board[y][x].position.y, opponent_color)
-                            //console.log(movements_for_piece)
-                            all_moves.push(movements_for_piece)
+                            let board_param = this.board[y][x].constructor.name
+                            let obj = {}
+                            obj[board_param] = movements_for_piece
+                            all_moves.push(obj)
                         }
                     }
                 }
             }
 
-            console.log(all_moves)
-           //for (let i = 0; i < all_moves.length; i++) {
-           //    for (let y = 0; y < all_moves[i].length; y++) {
-           //        for (let x = 0; x < all_moves[i][y].length; x++) {
-           //            //TODO: ommit numbers 1 of a pawn
-           //            if (all_moves[i][y][x] === 1 || all_moves[i][x][y] === 3) {
-           //                //console.log(i,x,y)
-           //                //TODO: merge this array into one
-           //                final[x][y] += all_moves[i][x][y]
-           //            }
-           //        }
-           //    }
-                //console.log(final)
-             //   break;
-            }
 
-        //}
 
-        else if (opponent_color === "black") {
-            for (let y = 0; y < this.board.length; y++) {
-                for (let x = 0; x < this.board[y].length; x++) {
-                    //ommit own and empty chesspieces
-                    if (this.board[x][y] != null) {
-                        if (this.board[x][y].color === opponent_color) {
-                            //console.log(this.board[x][y])
-                            //this.get_movement_pattern(this.board[x][y], x, y)
+            for (let i = 0; i < all_moves.length; i++) {
+                if (all_moves[i]["Pawn"] != undefined) {
+                    for (let y = 0; y < all_moves[i]["Pawn"].length; y++) {
+                        for (let x = 0; x < all_moves[i]["Pawn"][y].length; x++) {
+                            if (all_moves[i]["Pawn"][x][y] === 3) {
+                                if(final[x][y] < 3){
+                                // if the value is already 3, dont set another one
+                                final[x][y] = all_moves[i]["Pawn"][x][y]
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else {
+                    let key = Object.keys(all_moves[i])[0]
+                    for (let y = 0; y < all_moves[i][key].length; y++) {
+                        for (let x = 0; x < all_moves[i][key][y].length; x++) {
+                            if (all_moves[i][key][x][y] === 1) {
+                                if(final[x][y] < 1){
+                                // if the value is already 1, dont set another one
+                                final[x][y] = all_moves[i][key][x][y]
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
+
+        else if (opponent_color === "black") {
+            for (let y = this.board.length - 1; y >= 0; y--) {
+                for (let x = this.board[y].length - 1; x >= 0; x--) {
+                    //ommit own and empty chesspieces
+                    if (this.board[y][x] != null) {
+                        if (this.board[y][x].color === opponent_color) {
+                            // doing a lot of steps at the same time ... final result is the movement pattern per piece merged with the current board state
+                            let movements_for_piece = this.get_movement_pattern(this.board[y][x], this.board[y][x].position.x, this.board[y][x].position.y, opponent_color)
+                            let board_param = this.board[y][x].constructor.name
+                            let obj = {}
+                            obj[board_param] = movements_for_piece
+                            all_moves.push(obj)
+                        }
+                    }
+                }
+            }
+
+            for (let i = 0; i < all_moves.length; i++) {
+                if (all_moves[i]["Pawn"] != undefined) {
+                    for (let y = 0; y < all_moves[i]["Pawn"].length; y++) {
+                        for (let x = 0; x < all_moves[i]["Pawn"][y].length; x++) {
+                            if (all_moves[i]["Pawn"][x][y] === 3) {
+                                if(final[x][y] < 3){
+                                // if the value is already 3, dont set another one
+                                final[x][y] = all_moves[i]["Pawn"][x][y]
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else {
+                    let key = Object.keys(all_moves[i])[0]
+                    for (let y = 0; y < all_moves[i][key].length; y++) {
+                        for (let x = 0; x < all_moves[i][key][y].length; x++) {
+                            if (all_moves[i][key][x][y] === 1) {
+                                if(final[x][y] < 1){
+                                // if the value is already 1, dont set another one
+                                final[x][y] = all_moves[i][key][x][y]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return final;
     }
 
     show_promotion_dialog = function (visibility, position_to_x, position_to_y, color_to_display, _piece) {
