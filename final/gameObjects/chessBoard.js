@@ -3,28 +3,21 @@
 
 import { ChessPiece, Rook, Knight, Bishop, King, Queen, Pawn } from "./ChessPiece.js"
 class ChessBoard {
-    constructor() {
-        this.board = this.initializeBoard()
+    constructor(configuration, board_old, current_player, killed_pieces) {
+        if (configuration === "initial") {
+            this.board = this.initializeBoard()
+            console.log(this.board)
+        }
+        else {
+            this.current_player = current_player
+            this.killed_pieces = killed_pieces
+            this.board = this.restore_Board(board_old)
+        }
     }
 
     current_player = "white"
 
     killed_pieces = []
-
-    board_matrix = [
-        [0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0],
-    ];
-
-    board_configuration = [[new Rook("white"), new Knight("white"), "bishop", "queen", "king", "bishop", "knight", "rook"],
-    ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"]
-    ];
 
     initializeBoard = function () {
         let board = []
@@ -76,6 +69,35 @@ class ChessBoard {
         return board;
     }
 
+    restore_Board = function(board_old,current_player,killed_pieces){
+        let board = Array.from({ length: 8 }, () => Array(8).fill(0));
+
+        for (let y = 0; y < board_old.length; y++) {
+            for (let x = 0; x < board_old[y].length; x++) {
+
+                if (board_old[y][x] != null) {
+                    let key = Object.keys(board_old[y][x])[0]
+                    let pieces = {
+                        "Pawn": new Pawn(board_old[y][x][key].color, x, y),
+                        "Knight": new Knight(board_old[y][x][key].color, x, y),
+                        "Bishop": new Bishop(board_old[y][x][key].color, x, y),
+                        "Rook": new Rook(board_old[y][x][key].color, x, y),
+                        "King": new King(board_old[y][x][key].color, x, y),
+                        "Queen": new Queen(board_old[y][x][key].color, x, y),
+                    }
+
+                    board[y][x] = pieces[key]
+                }
+
+                else {
+                    board[y][x] = null
+                }
+            }
+        }
+
+        return board
+    }
+    
     render = function () {
         const chessboardElement = document.getElementById('chessboard');
         //clear the chessboard every time its rerendered
@@ -91,9 +113,27 @@ class ChessBoard {
                 chessboardElement.appendChild(squareElement);
             }
         }
-        //if the move was valid - switch to the other player
+    }
 
+    save_board_state = function () {
+        localStorage.setItem("board_data", JSON.stringify(this))
+        let temp_board = Array.from({ length: 8 }, () => Array(8).fill(0));
+        for (let y = 0; y < this.board.length; y++) {
+            for (let x = 0; x < this.board[y].length; x++) {
+                let cell_data = {}
+                if (this.board[y][x] != null) {
+                    cell_data[this.board[y][x].constructor.name] = this.board[y][x]
+                }
+                else {
+                    cell_data = null
+                }
 
+                temp_board[y][x] = cell_data
+
+            }
+        }
+        console.log(temp_board)
+        localStorage.setItem("board", JSON.stringify(temp_board))
     }
 
     display_movement_pattern = function (object, x_pos, y_pos) {
@@ -271,7 +311,6 @@ class ChessBoard {
                     if (this.board[j][i] != null) {
                         if (this.board[j][i].active) {
                             // hand over the active chess piece
-
                             if (this.validateMove(this.board[j][i], [x, y])) {
                                 this.board[j][i].movePiece(x, y, this);
                                 //check if there is a pawn applicable for a promotion
@@ -279,7 +318,7 @@ class ChessBoard {
                                 this.current_player = this.current_player === "white" ? "black" : "white"
                                 document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
                                 this.check_for_checkmate(this.current_player)
-
+                                this.save_board_state();
                             }
                         }
                     }
@@ -298,11 +337,10 @@ class ChessBoard {
                                 this.board[j][i].movePiece(x, y, this);
                                 //check if there is a pawn applicable for a promotion
                                 this.check_for_pawn_promotion(this.board[y][x], [x, y])
-
                                 this.current_player = this.current_player === "white" ? "black" : "white"
                                 document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
                                 this.check_for_checkmate(this.current_player)
-
+                                this.save_board_state()
                             }
                             else {
                                 continue
@@ -441,9 +479,9 @@ class ChessBoard {
                     for (let y = 0; y < all_moves[i]["Pawn"].length; y++) {
                         for (let x = 0; x < all_moves[i]["Pawn"][y].length; x++) {
                             if (all_moves[i]["Pawn"][x][y] === 3) {
-                                if(final[x][y] < 3){
-                                // if the value is already 3, dont set another one
-                                final[x][y] = all_moves[i]["Pawn"][x][y]
+                                if (final[x][y] < 3) {
+                                    // if the value is already 3, dont set another one
+                                    final[x][y] = all_moves[i]["Pawn"][x][y]
                                 }
                             }
                         }
@@ -455,9 +493,9 @@ class ChessBoard {
                     for (let y = 0; y < all_moves[i][key].length; y++) {
                         for (let x = 0; x < all_moves[i][key][y].length; x++) {
                             if (all_moves[i][key][x][y] === 1) {
-                                if(final[x][y] < 1){
-                                // if the value is already 1, dont set another one
-                                final[x][y] = all_moves[i][key][x][y]
+                                if (final[x][y] < 1) {
+                                    // if the value is already 1, dont set another one
+                                    final[x][y] = all_moves[i][key][x][y]
                                 }
                             }
                         }
@@ -489,9 +527,9 @@ class ChessBoard {
                     for (let y = 0; y < all_moves[i]["Pawn"].length; y++) {
                         for (let x = 0; x < all_moves[i]["Pawn"][y].length; x++) {
                             if (all_moves[i]["Pawn"][x][y] === 3) {
-                                if(final[x][y] < 3){
-                                // if the value is already 3, dont set another one
-                                final[x][y] = all_moves[i]["Pawn"][x][y]
+                                if (final[x][y] < 3) {
+                                    // if the value is already 3, dont set another one
+                                    final[x][y] = all_moves[i]["Pawn"][x][y]
                                 }
                             }
                         }
@@ -503,9 +541,9 @@ class ChessBoard {
                     for (let y = 0; y < all_moves[i][key].length; y++) {
                         for (let x = 0; x < all_moves[i][key][y].length; x++) {
                             if (all_moves[i][key][x][y] === 1) {
-                                if(final[x][y] < 1){
-                                // if the value is already 1, dont set another one
-                                final[x][y] = all_moves[i][key][x][y]
+                                if (final[x][y] < 1) {
+                                    // if the value is already 1, dont set another one
+                                    final[x][y] = all_moves[i][key][x][y]
                                 }
                             }
                         }
