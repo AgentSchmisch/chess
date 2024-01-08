@@ -69,7 +69,7 @@ class ChessBoard {
         return board;
     }
 
-    restore_Board = function(board_old,current_player,killed_pieces){
+    restore_Board = function (board_old, current_player, killed_pieces) {
         let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
         for (let y = 0; y < board_old.length; y++) {
@@ -78,12 +78,12 @@ class ChessBoard {
                 if (board_old[y][x] != null) {
                     let key = Object.keys(board_old[y][x])[0]
                     let pieces = {
-                        "Pawn": new Pawn(board_old[y][x][key].color, x, y),
-                        "Knight": new Knight(board_old[y][x][key].color, x, y),
-                        "Bishop": new Bishop(board_old[y][x][key].color, x, y),
-                        "Rook": new Rook(board_old[y][x][key].color, x, y),
-                        "King": new King(board_old[y][x][key].color, x, y),
-                        "Queen": new Queen(board_old[y][x][key].color, x, y),
+                        "Pawn": new Pawn(board_old[y][x][key].color, y, x),
+                        "Knight": new Knight(board_old[y][x][key].color, y, x),
+                        "Bishop": new Bishop(board_old[y][x][key].color, y, x),
+                        "Rook": new Rook(board_old[y][x][key].color, y, x),
+                        "King": new King(board_old[y][x][key].color, y, x),
+                        "Queen": new Queen(board_old[y][x][key].color, y, x),
                     }
 
                     board[y][x] = pieces[key]
@@ -97,7 +97,7 @@ class ChessBoard {
 
         return board
     }
-    
+
     render = function () {
         const chessboardElement = document.getElementById('chessboard');
         //clear the chessboard every time its rerendered
@@ -113,6 +113,8 @@ class ChessBoard {
                 chessboardElement.appendChild(squareElement);
             }
         }
+        document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
+
     }
 
     save_board_state = function () {
@@ -278,6 +280,7 @@ class ChessBoard {
     }
 
     handleSquareClick = function (y, x) {
+        console.log(x,y)
         //show movement pattern only for the active player
         if (this.board[y][x] != null) {
             if (this.board[y][x].color === this.current_player) {
@@ -295,14 +298,14 @@ class ChessBoard {
                 this.display_movement_pattern(this.board[y][x], x, y)
             }
         }
-
+        
         /*
         check if the clicked square is a valid move
         check if there is an enemy on the square
         check if its players turn
 
         -> if null or enemy
-            move to position/kill 
+            move to position/kill
         */
 
         if (this.board[y][x] === null) {
@@ -310,6 +313,7 @@ class ChessBoard {
                 for (let j = 0; j < this.board[i].length; j++) {
                     if (this.board[j][i] != null) {
                         if (this.board[j][i].active) {
+                            console.log(this.validateMove(this.board[j][i],[x,y]))
                             // hand over the active chess piece
                             if (this.validateMove(this.board[j][i], [x, y])) {
                                 this.board[j][i].movePiece(x, y, this);
@@ -382,7 +386,7 @@ class ChessBoard {
         //if there was no piece killed, just validate with the movement pattern
         if (piece2 === undefined) {
             let pattern = this.get_movement_pattern(piece, piece.position.x, piece.position.y, this.current_player)
-
+            console.log("pattern",pattern)
             if (pattern[to[1]][to[0]] === 1) {
                 return true
             }

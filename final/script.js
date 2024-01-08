@@ -1,6 +1,6 @@
 import { ChessBoard } from "./gameObjects/chessBoard.js"
 
-localStorage.clear()
+//localStorage.clear()
 
 //console.log(JSON.parse(localStorage.getItem("board")))
 if (localStorage.getItem("board") === null && localStorage.getItem("board_data") === null) {
