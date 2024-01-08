@@ -3,16 +3,21 @@
 
 import { ChessPiece, Rook, Knight, Bishop, King, Queen, Pawn } from "./ChessPiece.js"
 class ChessBoard {
-    constructor(configuration, board_old, current_player, killed_pieces) {
+    constructor(configuration, board_old, current_player, killed_pieces, piece) {
         if (configuration === "initial") {
             this.board = this.initializeBoard()
             console.log(this.board)
         }
+        else if(configuration === "demo"){
+            this.board = this.initializeDemoBoard(piece)
+        }
+
         else {
             this.current_player = current_player
             this.killed_pieces = killed_pieces
             this.board = this.restore_Board(board_old)
         }
+
     }
 
     current_player = "white"
@@ -68,7 +73,24 @@ class ChessBoard {
         this.render_killed();
         return board;
     }
+    initializeDemoBoard = function(piece){
+        let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
+        let color = "white"
+        let x = 4
+        let y = 4
+        let pieces = {
+            "Pawn": new Pawn(color, y, x),
+            "Knight": new Knight(color, y, x),
+            "Bishop": new Bishop(color, y, x),
+            "Rook": new Rook(color, y, x),
+            "King": new King(color, y, x),
+            "Queen": new Queen(color, y, x)
+        }
+
+        board[x][y] = pieces[piece]
+        return board
+    }
     restore_Board = function (board_old, current_player, killed_pieces) {
         let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
@@ -78,7 +100,7 @@ class ChessBoard {
                 if (board_old[y][x] != null) {
                     let key = Object.keys(board_old[y][x])[0]
                     let pieces = {
-                        "Pawn": new Pawn(board_old[y][x][key].color, y, x),
+                        "Pawn": new Pawn(board_old[y][x][key].color, y, x,board_old[y][x][key].first_move),
                         "Knight": new Knight(board_old[y][x][key].color, y, x),
                         "Bishop": new Bishop(board_old[y][x][key].color, y, x),
                         "Rook": new Rook(board_old[y][x][key].color, y, x),
@@ -114,7 +136,6 @@ class ChessBoard {
             }
         }
         document.getElementById("turn").innerHTML = `It's <b>${this.current_player}'s</b> turn`
-
     }
 
     save_board_state = function () {
@@ -134,7 +155,6 @@ class ChessBoard {
 
             }
         }
-        console.log(temp_board)
         localStorage.setItem("board", JSON.stringify(temp_board))
     }
 
@@ -280,7 +300,6 @@ class ChessBoard {
     }
 
     handleSquareClick = function (y, x) {
-        console.log(x,y)
         //show movement pattern only for the active player
         if (this.board[y][x] != null) {
             if (this.board[y][x].color === this.current_player) {
@@ -313,7 +332,6 @@ class ChessBoard {
                 for (let j = 0; j < this.board[i].length; j++) {
                     if (this.board[j][i] != null) {
                         if (this.board[j][i].active) {
-                            console.log(this.validateMove(this.board[j][i],[x,y]))
                             // hand over the active chess piece
                             if (this.validateMove(this.board[j][i], [x, y])) {
                                 this.board[j][i].movePiece(x, y, this);
@@ -386,7 +404,6 @@ class ChessBoard {
         //if there was no piece killed, just validate with the movement pattern
         if (piece2 === undefined) {
             let pattern = this.get_movement_pattern(piece, piece.position.x, piece.position.y, this.current_player)
-            console.log("pattern",pattern)
             if (pattern[to[1]][to[0]] === 1) {
                 return true
             }
@@ -422,7 +439,6 @@ class ChessBoard {
 
     check_for_checkmate = function (current_player) {
         let valid_moves = this.get_all_valid_moves_for_color(current_player)
-        console.log(valid_moves)
     }
 
     check_for_pawn_promotion = function (piece, to) {
