@@ -1,22 +1,40 @@
 import { ChessBoard } from "./gameObjects/chessBoard.js"
 
-//localStorage.clear()
+let continueGame = document.getElementById("continue").addEventListener("click", restoreGame)
+let newGame = document.getElementById("new").addEventListener("click", startNew)
 
-//console.log(JSON.parse(localStorage.getItem("board")))
+
+// if the local storage is empty start a new game on its own
 if (localStorage.getItem("board") === null && localStorage.getItem("board_data") === null) {
-    let board = new ChessBoard("initial")
-    console.log(board)
-    board.render()
+    startNew();
 }
 
-else if (localStorage.getItem("board") != null && localStorage.getItem("board_data") != null) {
+function restoreGame(){
+    // make the startcontainer invisible and show the ghessboard
+    let startContainer = document.querySelector(".gameScreen")
+    let buttonContainer = document.querySelector(".startScreen")
+    startContainer.style.display = "block"
+    buttonContainer.style.display = "none"
+
+    // restore all the elements from the previous game
     let board_data_raw = localStorage.getItem("board_data")
     let board_raw = localStorage.getItem("board")
     const storedObject = JSON.parse(board_data_raw);
     const _board = JSON.parse(board_raw);
-    console.log(storedObject)
-    console.log(_board)
+
     let board = new ChessBoard("", _board, storedObject.current_player, storedObject.killed_pieces)
-    console.log("final", board)
+    board.render()
+}
+
+function startNew(){
+    localStorage.clear()
+
+    let board = new ChessBoard("initial")
+
+    let startContainer = document.querySelector(".gameScreen")
+    let buttonContainer = document.querySelector(".startScreen")
+    startContainer.style.display = "block"
+    buttonContainer.style.display = "none"
+
     board.render()
 }
