@@ -11,6 +11,37 @@ h1 {
   justify-content: center;
 }
 
+.startScreen{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startScreen .content{
+  background-color:#383838;
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.startScreenbutton{
+  background-color: #555;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding:1rem;
+  margin:1rem;
+  width: 30%;
+  cursor: pointer;
+}
+.startScreenbutton * {
+  padding: 0.3rem;
+}
+.gameScreen{
+  display:none;
+}
+
 .documentation{
   font-size: 1rem;
   padding:1em;
