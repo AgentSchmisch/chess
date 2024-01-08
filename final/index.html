@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/c47bc33b25.js" crossorigin="anonymous"></script>
     <title>Chess</title>
 </head>
+
 <body>
     <h1>Chess</h1>
-    <section class ="content">
-        <div id="promotionOptionsblack" class="promotion-options"></div>
+
+    <section class="startScreen">
+        <section class="content">
+        <div class="startScreenbutton" id="new">
+            <i class="fa-solid fa-rotate-right"></i><p>new Game</p>
+        </div>
+        <div class="startScreenbutton" id="continue">
+            <i class="fa-solid fa-play"></i> <p>continue Game</p>
+        </div>
+        </section>
     </section>
-    <section class="content">
-    <div class="killed" id="killedwht"></div>
-    <div id="chessboard" class="chessboard"></div>
-    <div class="killed" id="killedblk"></div>
-    </section>
-    <section class="content">
-        <p id="turn">It's <b>white's</b> turn</p>
-        <div id="promotionOptionswhite" class="promotion-options"></div>
-    </section>
-    <section class="content">
-        <a class="documentation" href="./docs/index.html">Documentation 📑</a>
+
+    <section class="gameScreen">
+        <section class="content">
+            <div id="promotionOptionsblack" class="promotion-options"></div>
+        </section>
+        <section class="content">
+            <div class="killed" id="killedwht"></div>
+            <div id="chessboard" class="chessboard"></div>
+            <div class="killed" id="killedblk"></div>
+        </section>
+        <section class="content">
+            <p id="turn">It's <b>white's</b> turn</p>
+            <div id="promotionOptionswhite" class="promotion-options"></div>
+        </section>
+        <section class="content">
+            <a class="documentation" href="./docs/index.html">Documentation 📑</a>
+        </section>
     </section>
     <script type="module" src="./script.js"></script>
 </body>
+
 </html>
