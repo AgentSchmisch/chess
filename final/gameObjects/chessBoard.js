@@ -91,7 +91,8 @@ class ChessBoard {
         board[x][y] = pieces[piece]
         return board
     }
-    restore_Board = function (board_old, current_player, killed_pieces) {
+    
+    restore_Board = function (board_old) {
         let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
         for (let y = 0; y < board_old.length; y++) {
@@ -169,12 +170,12 @@ class ChessBoard {
         }
 
         let resultArray = this.get_movement_pattern(object, x_pos, y_pos, this.current_player)
+        console.log("res", resultArray)
         for (let i = 0; i < resultArray.length; i++) {
             for (let j = 0; j < resultArray[i].length; j++) {
-                if (resultArray[i][j] === 1) {
+                if (resultArray[i][j] === 1 || resultArray[i][j] instanceof ChessPiece) {
                     let css_class = "active"
                     if (this.board[i][j] != null) {
-
                         if (this.board[i][j].color != object.color) {
                             if (object instanceof Pawn) {
                                 continue
@@ -260,7 +261,7 @@ class ChessBoard {
             }
         }
         let piece_positions = this.project_piece_position_to_movement_pattern(resultArray)
-
+        
         let possible_moves = this.calculate_move_directions(object, piece_positions, color)
         return possible_moves
     }
@@ -271,7 +272,11 @@ class ChessBoard {
         // - right
         // - back
         // - left
-        // - diagonally
+        // - diagonally in all directions
+        // - the special movement pattern for the Knight
+        console.log("allowed", allowed_positions)
+
+        if(!(player instanceof Knight)){
 
         let player_position = player.position
 
@@ -280,12 +285,29 @@ class ChessBoard {
             //therefore the final array get built up gradually
             allowed_positions = player[player.movement_directions[i]](player_position, allowed_positions, color);
         }
+    }
+
+    else{
+        for (let y = 0; y < allowed_positions.length; y++) {
+            for (let x = 0; x < allowed_positions[y].length; x++) {
+                if(allowed_positions[y][x] != 0)
+                if(allowed_positions[y][x].color != player.color){
+                    allowed_positions[y][x] = 1;
+                }
+                else{
+                    allowed_positions[y][x] = 0;
+                }
+            }
+            
+        }
+    }
 
         return allowed_positions;
     }
 
     project_piece_position_to_movement_pattern = function (movement_pattern) {
         let resultArray = movement_pattern
+        console.log("to project", resultArray)
         for (let y = 0; y < movement_pattern.length; y++) {
             for (let x = 0; x < movement_pattern[y].length; x++) {
                 if (this.board[x][y] != null && movement_pattern[x][y] === 1) {
