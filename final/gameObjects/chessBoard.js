@@ -2,13 +2,15 @@
 // TODO: create board layout with respect to the board_configuration array
 
 import { ChessPiece, Rook, Knight, Bishop, King, Queen, Pawn } from "./ChessPiece.js"
+import { startNew } from "../script.js"
+
 class ChessBoard {
     constructor(configuration, board_old, current_player, killed_pieces, piece) {
         if (configuration === "initial") {
             this.board = this.initializeBoard()
             console.log(this.board)
         }
-        else if(configuration === "demo"){
+        else if (configuration === "demo") {
             this.board = this.initializeDemoBoard(piece)
         }
 
@@ -73,7 +75,7 @@ class ChessBoard {
         this.render_killed();
         return board;
     }
-    initializeDemoBoard = function(piece){
+    initializeDemoBoard = function (piece) {
         let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
         let color = "white"
@@ -91,7 +93,7 @@ class ChessBoard {
         board[x][y] = pieces[piece]
         return board
     }
-    
+
     restore_Board = function (board_old) {
         let board = Array.from({ length: 8 }, () => Array(8).fill(0));
 
@@ -101,7 +103,7 @@ class ChessBoard {
                 if (board_old[y][x] != null) {
                     let key = Object.keys(board_old[y][x])[0]
                     let pieces = {
-                        "Pawn": new Pawn(board_old[y][x][key].color, y, x,board_old[y][x][key].first_move),
+                        "Pawn": new Pawn(board_old[y][x][key].color, y, x, board_old[y][x][key].first_move),
                         "Knight": new Knight(board_old[y][x][key].color, y, x),
                         "Bishop": new Bishop(board_old[y][x][key].color, y, x),
                         "Rook": new Rook(board_old[y][x][key].color, y, x),
@@ -170,100 +172,121 @@ class ChessBoard {
         }
 
         let resultArray = this.get_movement_pattern(object, x_pos, y_pos, this.current_player)
-        console.log("res", resultArray)
-        for (let i = 0; i < resultArray.length; i++) {
-            for (let j = 0; j < resultArray[i].length; j++) {
-                if (resultArray[i][j] === 1 || resultArray[i][j] instanceof ChessPiece) {
-                    let css_class = "active"
-                    if (this.board[i][j] != null) {
-                        if (this.board[i][j].color != object.color) {
-                            if (object instanceof Pawn) {
+        if (resultArray) {
+            for (let i = 0; i < resultArray.length; i++) {
+                for (let j = 0; j < resultArray[i].length; j++) {
+                    if (resultArray[i][j] === 1) {
+                        let css_class = "active"
+                        if (this.board[i][j] != null) {
+                            if (this.board[i][j].color != object.color) {
+                                if (object instanceof Pawn) {
+                                    continue
+                                }
+                                css_class = "kill"
+                            }
+                            if (this.board[i][j].color === object.color) {
                                 continue
                             }
-                            css_class = "kill"
                         }
-                        if (this.board[i][j].color === object.color) {
-                            continue
-                        }
+                        let elem = document.getElementById(`${i}/${j}`)
+                        elem.classList.add(css_class)
                     }
-                    let elem = document.getElementById(`${i}/${j}`)
-                    elem.classList.add(css_class)
-                }
-                else if (resultArray[i][j] === 3) {
-                    let css_class = "active"
-                    //check if there is a an ally in the way of the player
-                    //check for the piece being a pawn - if so display a different kill pattern
-                    if (this.board[i][j] != null) {
+                    else if (resultArray[i][j] === 3) {
+                        let css_class = "active"
+                        //check if there is a an ally in the way of the player
+                        //check for the piece being a pawn - if so display a different kill pattern
+                        if (this.board[i][j] != null) {
 
-                        if (this.board[i][j].color != object.color) {
-                            css_class = "kill"
+                            if (this.board[i][j].color != object.color) {
+                                css_class = "kill"
+                            }
+                            if (this.board[i][j].color === object.color) {
+                                continue
+                            }
                         }
-                        if (this.board[i][j].color === object.color) {
+                        else if (this.board[i][j] === null) {
                             continue
                         }
+                        let elem = document.getElementById(`${i}/${j}`)
+                        elem.classList.add(css_class)
                     }
-                    else if (this.board[i][j] === null) {
-                        continue
-                    }
-                    let elem = document.getElementById(`${i}/${j}`)
-                    elem.classList.add(css_class)
                 }
             }
         }
     }
 
     get_movement_pattern = function (object, x_pos, y_pos, color) {
+
+        //TODO: implement check condition for the king of the color being in check
+        let king
         let movement_pattern
 
-        // check if the current chessPiece is a pawn, if so display the movement pattern according to the variable first_move
-        if (object instanceof Pawn) {
-            if (object.movement_pattern[color].length > 1) {
-                //check if the move is the first one or the second
-                if (object.first_move) {
-                    movement_pattern = object.movement_pattern[color][0][1]
-                }
-
-                else {
-                    movement_pattern = object.movement_pattern[color][1][1]
+        for (let y = 0; y < this.board.length; y++) {
+            for (let x = 0; x < this.board[y].length; x++) {
+                if (this.board[y][x] instanceof King && this.board[y][x].color === color) {
+                    king = this.board[y][x]
                 }
             }
         }
-        // if the object is not a pawn, use the movement pattern that is in the array
+
+        if (king.checked && king.position.x != x_pos && king.position.y != y_pos) {
+
+        }
         else {
-            movement_pattern = object.movement_pattern[0]
-        }
 
-        /*
-            generate a new 8x8 array, representing the chess board consisting of zeroes
-            project the movement pattern into the deep copy of the board
-        */
 
-        //set the movement pattern shift variable
-        let movement_pattern_shift = object.movement_pattern_shift
+            // check if the current chessPiece is a pawn, if so display the movement pattern according to the variable first_move
+            if (object instanceof Pawn) {
+                if (object.movement_pattern[color].length > 1) {
+                    //check if the move is the first one or the second
+                    if (object.first_move) {
+                        movement_pattern = object.movement_pattern[color][0][1]
+                    }
 
-        // array that is used for the projection consists of zeroes
-        let resultArray = Array.from({ length: 8 }, () => Array(8).fill(0));
-        //if the current piece is a pawn 
-        if (object instanceof Pawn) {
-            movement_pattern_shift = object.movement_pattern_shift[object.color];
-        }
-
-        // Project the movement pattern into the resultArray
-        for (let i = 0; i < movement_pattern.length; i++) {
-            for (let j = 0; j < movement_pattern[i].length; j++) {
-                // skip the array positions in case the movement pattern overlays the borders of the board
-                if (y_pos - movement_pattern_shift[0] + i < 0 || x_pos - movement_pattern_shift[1] + j < 0)
-                    continue;
-                else if (y_pos - movement_pattern_shift[0] + i > 7 || x_pos - movement_pattern_shift[1] + j > 7)
-                    continue;
-                // in the movement patterns the number 2 represents the players position, the array projection needs to be moved to the current players position on the chessboard
-                resultArray[y_pos - movement_pattern_shift[0] + i][x_pos - movement_pattern_shift[1] + j] = movement_pattern[i][j];
+                    else {
+                        movement_pattern = object.movement_pattern[color][1][1]
+                    }
+                }
             }
+            // if the object is not a pawn, use the movement pattern that is in the array
+            else {
+                movement_pattern = object.movement_pattern[0]
+            }
+
+            /*
+                generate a new 8x8 array, representing the chess board consisting of zeroes
+                project the movement pattern into the deep copy of the board
+            */
+
+            //set the movement pattern shift variable
+            let movement_pattern_shift = object.movement_pattern_shift
+
+            // array that is used for the projection consists of zeroes
+            let resultArray = Array.from({ length: 8 }, () => Array(8).fill(0));
+            //if the current piece is a pawn 
+            if (object instanceof Pawn) {
+                movement_pattern_shift = object.movement_pattern_shift[object.color];
+            }
+
+            // Project the movement pattern into the resultArray
+            for (let i = 0; i < movement_pattern.length; i++) {
+                for (let j = 0; j < movement_pattern[i].length; j++) {
+                    // skip the array positions in case the movement pattern overlays the borders of the board
+                    if (y_pos - movement_pattern_shift[0] + i < 0 || x_pos - movement_pattern_shift[1] + j < 0)
+                        continue;
+                    else if (y_pos - movement_pattern_shift[0] + i > 7 || x_pos - movement_pattern_shift[1] + j > 7)
+                        continue;
+                    // in the movement patterns the number 2 represents the players position, the array projection needs to be moved to the current players position on the chessboard
+                    resultArray[y_pos - movement_pattern_shift[0] + i][x_pos - movement_pattern_shift[1] + j] = movement_pattern[i][j];
+                }
+            }
+            let piece_positions = this.project_piece_position_to_movement_pattern(resultArray)
+
+            let possible_moves = this.calculate_move_directions(object, piece_positions, color)
+            console.log(possible_moves)
+
+            return possible_moves
         }
-        let piece_positions = this.project_piece_position_to_movement_pattern(resultArray)
-        
-        let possible_moves = this.calculate_move_directions(object, piece_positions, color)
-        return possible_moves
     }
 
     calculate_move_directions = function (player, allowed_positions, color) {
@@ -274,40 +297,37 @@ class ChessBoard {
         // - left
         // - diagonally in all directions
         // - the special movement pattern for the Knight
-        console.log("allowed", allowed_positions)
 
-        if(!(player instanceof Knight)){
+        if (!(player instanceof Knight)) {
 
-        let player_position = player.position
+            let player_position = player.position
 
-        for (let i = 0; i < player.movement_directions.length; i++) {
-            // allowed positions gets fed into the functions over and over again
-            //therefore the final array get built up gradually
-            allowed_positions = player[player.movement_directions[i]](player_position, allowed_positions, color);
+            for (let i = 0; i < player.movement_directions.length; i++) {
+                // allowed positions gets fed into the functions over and over again
+                //therefore the final array get built up gradually
+                allowed_positions = player[player.movement_directions[i]](player_position, allowed_positions, color);
+            }
         }
-    }
 
-    else{
-        for (let y = 0; y < allowed_positions.length; y++) {
-            for (let x = 0; x < allowed_positions[y].length; x++) {
-                if(allowed_positions[y][x] != 0)
-                if(allowed_positions[y][x].color != player.color){
-                    allowed_positions[y][x] = 1;
-                }
-                else{
-                    allowed_positions[y][x] = 0;
+        else {
+            for (let y = 0; y < allowed_positions.length; y++) {
+                for (let x = 0; x < allowed_positions[y].length; x++) {
+                    if (allowed_positions[y][x] != 0)
+                        if (allowed_positions[y][x].color != player.color) {
+                            allowed_positions[y][x] = 1;
+                        }
+                        else {
+                            allowed_positions[y][x] = 0;
+                        }
+                    allowed_positions[player.position.y][player.position.x] = 0
                 }
             }
-            
         }
-    }
-
         return allowed_positions;
     }
 
     project_piece_position_to_movement_pattern = function (movement_pattern) {
         let resultArray = movement_pattern
-        console.log("to project", resultArray)
         for (let y = 0; y < movement_pattern.length; y++) {
             for (let x = 0; x < movement_pattern[y].length; x++) {
                 if (this.board[x][y] != null && movement_pattern[x][y] === 1) {
@@ -339,7 +359,7 @@ class ChessBoard {
                 this.display_movement_pattern(this.board[y][x], x, y)
             }
         }
-        
+
         /*
         check if the clicked square is a valid move
         check if there is an enemy on the square
@@ -461,6 +481,66 @@ class ChessBoard {
 
     check_for_checkmate = function (current_player) {
         let valid_moves = this.get_all_valid_moves_for_color(current_player)
+        let king
+        // find the current position of the king
+        for (let y = 0; y < this.board.length; y++) {
+            for (let x = 0; x < this.board[y].length; x++) {
+                if (this.board[y][x] instanceof King) {
+                    if (this.board[y][x].color === current_player) {
+                        king = this.board[y][x]
+                    }
+                }
+                else
+                    continue;
+            }
+        }
+        // get the movement pattern for the king
+        let movement_pattern = this.get_movement_pattern(king, king.position.x, king.position.y, king.color);
+        console.log("movement_king", movement_pattern)
+        console.log("possible enemy moves", valid_moves)
+        // compare the valid_moves to the movement_pattern and check if there are any possible positions left
+        for (let y = 0; y < movement_pattern.length; y++) {
+            for (let x = 0; x < movement_pattern[y].length; x++) {
+                //if the king is surrounded by the own people, it will also go to checkmate with current implementation
+                //possible solution: 
+                //check for a 1 or 3 on the kings position
+                if (valid_moves[king.position.y][king.position.x] === 1 || valid_moves[king.position.y][king.position.y] === 1) {
+                    king.checked = true
+                }
+                else
+                    king.checked = false
+            }
+        }
+        console.log(`${king.color}'s king is checked`, king.checked)
+
+        // variable to store number of remaining moves in
+        let possible_moves = 0
+
+        if (king.checked) {
+            // check if there are any alternative moves
+            // if not, kill the king and show gameover
+
+            for (let y = 0; y < movement_pattern.length; y++) {
+                for (let x = 0; x < movement_pattern[y].length; x++) {
+                    if (movement_pattern[y][x] === 1) {
+                        if (valid_moves[y][x] >= 1) {
+                            // if an enemy piece can move to this position
+                        }
+
+                        else {
+                            possible_moves += 1;
+                        }
+                    }
+                }
+            }
+            if (possible_moves === 0) {
+                this.show_gameover_dialog(king.color)
+            }
+            console.log(possible_moves)
+
+        }
+
+
     }
 
     check_for_pawn_promotion = function (piece, to) {
@@ -513,10 +593,11 @@ class ChessBoard {
                     }
                 }
             }
-
-
+            //TODO: get_movement_pattern for rook still not working correctly
+            console.log(all_moves)
 
             for (let i = 0; i < all_moves.length; i++) {
+                console.log(all_moves[i])
                 if (all_moves[i]["Pawn"] != undefined) {
                     for (let y = 0; y < all_moves[i]["Pawn"].length; y++) {
                         for (let x = 0; x < all_moves[i]["Pawn"][y].length; x++) {
@@ -613,6 +694,20 @@ class ChessBoard {
             promotionOptionsElement.innerHTML = ""
         }
 
+    }
+    show_gameover_dialog = function (winner) {
+        let gameOverContainer = document.querySelector(".gameOver")
+        let winnerContainer = document.querySelector(".winner")
+        let gameContainer = document.querySelector(".gameScreen")
+        gameContainer.style.display = "none"
+        gameOverContainer.style.display = "block"
+        winnerContainer.innerHTML = `
+        <img class='sprite' src='gameObjects/sprites/${winner}/queen.png'/>
+        <div><b>${winner}</b> wins the game</div>
+        `
+        localStorage.clear();
+        let newGame = document.getElementById("new").addEventListener("click", startNew)
+        console.log(`${winner} wins the game`)
     }
 
 }

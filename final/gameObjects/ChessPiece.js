@@ -1,5 +1,3 @@
-import { ChessBoard } from "./chessBoard.js"
-
 class ChessPiece {
     color = ""
 
@@ -177,7 +175,7 @@ class ChessPiece {
                     allowed_positions[y2][x2] = 0;
                 }
                 // reset the enemies position with a 1 so it will get colored red
-                allowed_positions[x][y] = 1
+                allowed_positions[y][x] = 1
                 break;
             }
         }
@@ -412,6 +410,8 @@ class Queen extends ChessPiece {
 
 class King extends ChessPiece {
     imgUrl = ""
+
+    checked = false
     movement_pattern_shift = [1, 1]
     movement_pattern = [
         [
@@ -422,7 +422,6 @@ class King extends ChessPiece {
     ]
 
     movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left", "diagonal_left_bottom", "diagonal_left_top", "diagonal_right_bottom", "diagonal_right_top"]
-
     constructor(color, y, x) {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/king.png`

@@ -10,7 +10,7 @@ if (localStorage.getItem("board") === null && localStorage.getItem("board_data")
 }
 
 function restoreGame(){
-    // make the startcontainer invisible and show the ghessboard
+    // make the startcontainer invisible and show the chessboard
     let startContainer = document.querySelector(".gameScreen")
     let buttonContainer = document.querySelector(".startScreen")
     startContainer.style.display = "block"
@@ -25,7 +25,7 @@ function restoreGame(){
     let board = new ChessBoard("", _board, storedObject.current_player, storedObject.killed_pieces)
     board.render()
 }
-
+// if the player wishes to start a new game
 function startNew(){
     localStorage.clear()
 
@@ -38,3 +38,5 @@ function startNew(){
 
     board.render()
 }
+
+export {startNew}

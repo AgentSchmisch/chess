@@ -41,6 +41,14 @@ h1 {
 .gameScreen{
   display:none;
 }
+.gameOver{
+  display:none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #555555;
+
+}
 
 .documentation{
   font-size: 1rem;
