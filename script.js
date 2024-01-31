@@ -25,16 +25,18 @@ function restoreGame(){
     let board = new ChessBoard("", _board, storedObject.current_player, storedObject.killed_pieces)
     board.render()
 }
-// if the player wishes to start a new game
 function startNew(){
-    localStorage.clear()
+    // if the player wishes to start a new game
+    localStorage.clear();
 
     let board = new ChessBoard("initial")
 
     let startContainer = document.querySelector(".gameScreen")
     let buttonContainer = document.querySelector(".startScreen")
+    let gameOverContainer = document.querySelector(".gameOver")
     startContainer.style.display = "block"
     buttonContainer.style.display = "none"
+    gameOverContainer.style.display = "none"
 
     board.render()
 }

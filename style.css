@@ -109,3 +109,10 @@ h1 {
   height: 50px;
   width: 50px;
 }
+
+.winner{
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  flex-direction: column;
+}

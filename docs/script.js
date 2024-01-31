@@ -1,16 +1,20 @@
-let converter = new showdown.Converter();
-let md = '[**Showdown**](http://www.showdownjs.com) is *great*\n' +
-         'because:\n\n' +
-         ' - it\'s easy to use\n' +
-         ' - it\'s extensible\n' +
-         ' - works in the server and in the browser'
-         ;
+import { DemoBoard } from "../gameObjects/demoBoard.js";
 
 
-const fr = new FileReader();
+let rookBoard = new DemoBoard("Rook")
+rookBoard.render("#rookBoard")
 
+let pawnBoard = new DemoBoard("Pawn")
+pawnBoard.render("#pawnBoard")
 
-md = fr.readAsText("./README.md", "text")
-var html = converter.makeHtml(md);
+let bishopBoard = new DemoBoard("Bishop")
+bishopBoard.render("#bishopBoard")
 
-document.getElementById("documentation").innerHTML = html
+let knightBoard = new DemoBoard("Knight")
+knightBoard.render("#knightBoard")
+
+let queenBoard = new DemoBoard("Queen")
+queenBoard.render("#queenBoard")
+
+let kingBoard = new DemoBoard("King")
+kingBoard.render("#kingBoard")

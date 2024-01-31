@@ -103,3 +103,39 @@ body {
     background-color: #444; /* Dark background color for table header */
   }
   
+  .chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 1px;
+  }
+  
+  .square {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+  }
+  
+  .sprite {
+    height: 50px;
+    width: 50px;
+  }
+  
+  .white {
+    background-color: #fff;
+  }
+  
+  .black {
+    background-color: #888;
+  }
+  
+  .active {
+    background-color: rgb(170, 250, 187);
+  }
+  
+  .kill {
+    background-color: rgb(250, 170, 170);
+  }  

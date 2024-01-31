@@ -412,6 +412,7 @@ class King extends ChessPiece {
     imgUrl = ""
 
     checked = false
+    possible_positions
     movement_pattern_shift = [1, 1]
     movement_pattern = [
         [
@@ -422,9 +423,16 @@ class King extends ChessPiece {
     ]
 
     movement_directions = ["straight_backward", "straight_forward", "straight_right", "straight_left", "diagonal_left_bottom", "diagonal_left_top", "diagonal_right_bottom", "diagonal_right_top"]
-    constructor(color, y, x) {
+    constructor(color, y, x, checked, possible_moves) {
         super(color, y, x)
         this.imgUrl = `./gameObjects/sprites/${color}/king.png`
+
+        //if a board state is trying to be restored
+        if (checked != undefined || possible_moves != undefined){
+            this.checked = checked
+            this.possible_positions = possible_moves
+            console.log("set the possible moves", possible_moves, checked)
+        }
     }
 }
 
